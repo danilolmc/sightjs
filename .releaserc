@@ -1,8 +1,8 @@
 {
   "branches": [
-    { "name": "main" },
-    { "name": "beta", "channel": "beta", "prerelease": "true" },
-    { "name": "next", "channel": "next", "prerelease": "true" }
+    { "name": "master" },
+    { "name": "beta", "channel": "beta", "prerelease": "beta" },
+    { "name": "next", "channel": "next", "prerelease": "next" }
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",
@@ -10,12 +10,16 @@
     "@semantic-release/changelog",
     "@semantic-release/npm",
     [
-      "@semantic-release/github",
-      {
+      "@semantic-release/github", {
         "assets": [
           "dist/*",
           "CHANGELOG.md"
         ]
+      }
+    ],
+    [
+      "@semantic-release/exec", {
+        "prepareCmd": "VERSION=${nextRelease.version} node dist/bin/updateViewJSVersion.js"
       }
     ]
   ]

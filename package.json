@@ -50,7 +50,7 @@
     "lint": "eslint --config eslint.config.js",
     "lint:fix": "eslint --config eslint.config.js --fix",
     "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|json)\"",
-    "semantic-release": "npx semantic-release",
+    "release": "semantic-release",
     "prepare": "husky",
     "commit": "git-cz"
   },
