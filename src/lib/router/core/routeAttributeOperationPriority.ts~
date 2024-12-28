@@ -1,0 +1,14 @@
+import { Route } from '@/lib/routes/provider.ts';
+
+type PrioryType = Record<keyof Route, string>;
+
+export const RouteAttrPriorities: PrioryType = {
+
+};
+
+
+export function routeAttributeOperationPriority(route: Route) {
+  const keys = Object.keys(route);
+
+
+}

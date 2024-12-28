@@ -1,0 +1,122 @@
+import { html } from '@/lib/dom/html.ts';
+import { Component } from '@/lib/dom/component/component.ts';
+import { routeTestingBoostrap } from '@/lib/router/testing/router.testing.ts';
+import { screen } from '@testing-library/dom';
+import { router } from '@/lib/router/api/router.ts';
+import { routingListener } from '@/lib/router/core/events/listener.ts';
+import { RouterCycleEvents } from '@/lib/router/core/events/routerCycleEvents.ts';
+
+const componentsCases = {
+  home: Component('app-home-test-a', () => () => html` <div>Home</div>`),
+
+  about: Component(
+    'app-home-about-test-b',
+    () => () => html` <div data-testid="home-content">Home - About</div>`,
+  ),
+  aboutWithParams: Component('app-about-param', () => {
+    const route = router();
+    return () =>
+      html` <div data-testid="about-content">
+        Post ID - ${route.snapshot.params().id}
+      </div>`;
+  }),
+  nestedWithParams: Component('app-author-nested-param', () => {
+    const route = router();
+    return () =>
+      html` <div data-testid="about-content">
+        Post ID - ${route.snapshot.root().id}, Author -
+        ${route.snapshot.root().name}
+      </div>`;
+  }),
+};
+
+describe('Navigation & Snapshot API', () => {
+  beforeAll(() => {
+    routeTestingBoostrap([
+      { path: '' },
+      {
+        path: 'about',
+        component: () => componentsCases.about,
+      },
+      {
+        path: 'post/:id',
+        component: () => componentsCases.aboutWithParams,
+        children: [
+          {
+            path: 'author/:name',
+            component: () => componentsCases.nestedWithParams,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('should rendering page respective component', async () => {
+    const route = router();
+    route.navigateByUrl('/about');
+
+    const about = await screen.findByTestId('home-content');
+
+    expect(about).toBeInTheDocument();
+  });
+
+  it('should render param and its respective component', async () => {
+    const route = router();
+    route.navigateByUrl('/post/1');
+
+    const about = await screen.findByText('Post ID - 1');
+
+    expect(about).toBeInTheDocument();
+  });
+
+  it('should get all route params from nested routes', async () => {
+    const route = router();
+
+    route.navigateByUrl('/post/1/author/John Doe');
+
+    const postWithAuthorName = await screen.findByText(
+      'Post ID - 1, Author - John Doe',
+    );
+
+    expect(postWithAuthorName).toBeInTheDocument();
+  });
+
+  // TODO: Separar o que é teste de renderização de dados da rota em template do que é teste envolvendo eventos de rota
+
+  it('should get current route param', async () => {
+    const route = router();
+
+    routingListener.on(RouterCycleEvents.CHANGE_END, () => {
+      expect(route.snapshot.params().name).toBe('John Doe');
+      expect(route.snapshot.params().id).toBeUndefined();
+    });
+
+    route.navigateByUrl('post/1/author/John Doe');
+  });
+
+  it('should get all params in the route', async () => {
+    const route = router();
+
+    routingListener.on(RouterCycleEvents.CHANGE_END, () => {
+      const data = route.snapshot.root();
+      expect(data.id).toBe('1');
+      expect(data.name).toBe('John Doe');
+    });
+
+    route.navigateByUrl('post/1/author/John Doe');
+  });
+
+  it('should get query params from route', async () => {
+    const route = router();
+
+    routingListener.on(RouterCycleEvents.CHANGE_END, () => {
+      expect(route.snapshot.queryParams().name).toBe('John Doe');
+    });
+
+    route.navigateByUrl('/about', {
+      queryParams: {
+        name: 'John Doe',
+      },
+    });
+  });
+});

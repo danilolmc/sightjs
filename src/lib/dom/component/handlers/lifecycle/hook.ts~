@@ -1,0 +1,25 @@
+function debounce(func, wait) {
+  let timeout;
+
+  return function (...args) {
+    // Limpa o timeout anterior se a função for chamada novamente dentro do tempo limite
+    clearTimeout(timeout);
+
+    // Define o novo timeout para chamar a função após o intervalo de espera
+    timeout = setTimeout(() => {
+      func.apply(this, args);
+    }, wait);
+  };
+}
+
+export class HookHandler {
+  private _callbacks = [];
+
+  protected add(callback: () => void) {
+    this._callbacks.push(callback);
+  }
+
+  executeCallbacks() {
+    this._callbacks.forEach((callback) => callback());
+  }
+}

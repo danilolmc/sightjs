@@ -1,0 +1,9 @@
+import { RefHandler } from '@/lib/dom/component/handlers/ref.ts';
+import { RefContext } from '@/lib/dom/ref/RefContext.ts';
+
+describe('RefHandler', () => {
+  it('should register refs', () => {
+    const refHandler = new RefHandler(null, RefContext.getInstance());
+    refHandler.registerRefs();
+  });
+});

@@ -1,0 +1,41 @@
+export enum RouterEvents {
+  CHANGE_START = 'routing-start',
+  CHANGE_END = 'routing-end',
+  CHANGE_ERROR = 'routing-error',
+  CHANGE_CANCEL = 'routing-cancel',
+  CHANGE_LOADING = 'routing-loading',
+}
+
+export const router = {
+  on: (event: RouterEvents, callback: () => void) => {
+    document.addEventListener(event, callback);
+  },
+};
+
+function triggerRouteEvent(event: RouterEvents) {
+  document.dispatchEvent(new CustomEvent(event));
+}
+
+export const routerEventTriggers = {
+  dispatchRoutingStart: () => triggerRouteEvent(RouterEvents.CHANGE_START),
+  dispatchRoutingEnd: () => triggerRouteEvent(RouterEvents.CHANGE_END),
+  dispatchRoutingError: () => triggerRouteEvent(RouterEvents.CHANGE_ERROR),
+  dispatchRoutingCancel: () => triggerRouteEvent(RouterEvents.CHANGE_CANCEL),
+  dispatchRoutingLoading: () => triggerRouteEvent(RouterEvents.CHANGE_LOADING),
+};
+
+export const {
+  dispatchRoutingStart,
+  dispatchRoutingEnd,
+  dispatchRoutingError,
+  dispatchRoutingCancel,
+  dispatchRoutingLoading,
+} = routerEventTriggers;
+
+export interface IRouterEvents {
+  dispatchRoutingStart: () => void,
+  dispatchRoutingEnd: () => void,
+  dispatchRoutingError: () => void,
+  dispatchRoutingCancel: () => void,
+  dispatchRoutingLoading: () => void
+}

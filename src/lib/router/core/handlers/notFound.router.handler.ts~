@@ -1,0 +1,25 @@
+import {
+  IRouterRenderer,
+  IRouterDispatchingEvents,
+  Route,
+  Routes,
+} from '@/lib/types/router/router.types.ts';
+
+export class NotFoundRouteHandler {
+  constructor(
+    private readonly renderer: IRouterRenderer,
+    private readonly routerEvents: IRouterDispatchingEvents,
+  ) {}
+
+  handleNotFound(routes: Routes, element: Element) {
+    const notFoundRoute = routes.find((route: Route) => route.path == '**');
+
+    if (!notFoundRoute) {
+      this.routerEvents.dispatchRoutingError();
+      this.renderer.render(element, document.createElement('div'))
+      throw new Error('Fallback not found route (**) is not defined in route tree');
+    }
+
+    this.renderer.render(element, notFoundRoute.component());
+  }
+}

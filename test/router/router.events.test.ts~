@@ -1,0 +1,112 @@
+import { router } from '@/lib/router/api/router.ts';
+import {
+  routeTesting,
+  waitForRouting,
+} from '@/lib/router/testing/router.testing.ts';
+import { html } from '@/lib/dom/html.ts';
+import { Component } from '@/lib/dom/component/component.ts';
+import { routerEventTriggers } from '@/lib/router/core/events/router-events.ts';
+import { vi } from 'vitest';
+
+describe('Router Events', () => {
+  const eventsExecutionOrdering = new Set();
+
+  const componentsCases = {
+    home: Component('app-event-route-home', () => () => html`<p>Home</p>`),
+  };
+
+  beforeAll(() => {
+    routeTesting([
+      {
+        path: '',
+        component: () => componentsCases.home,
+      },
+      {
+        path: 'about',
+        component: () => componentsCases.home,
+      },
+    ]);
+  });
+
+  it('should dispatch route change start event when a route change gets triggered', () => {
+    const route = router();
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingStart');
+
+    route.navigateByUrl('/about');
+
+    expect(routerEventTriggers.dispatchRoutingStart).toHaveBeenCalled();
+  });
+
+  it('should dispatch route loading start event when a route change gets triggered', () => {
+    const route = router();
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingLoadingStart');
+
+    route.navigateByUrl('/about');
+
+    expect(routerEventTriggers.dispatchRoutingLoadingStart).toHaveBeenCalled();
+  });
+
+  it('should dispatch route loading end event when a route change gets triggered', () => {
+    const route = router();
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingLoadingEnd');
+
+    route.navigateByUrl('/about');
+
+    expect(routerEventTriggers.dispatchRoutingLoadingEnd).toHaveBeenCalled();
+  });
+
+  it('should dispatch route end event when a route change gets triggered', () => {
+    const route = router();
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingEnd');
+
+    route.navigateByUrl('/about');
+
+    expect(routerEventTriggers.dispatchRoutingEnd).toHaveBeenCalled();
+  });
+
+  it('should dispatch events in the correct order', () => {
+    const route = router();
+
+    function saveEvent(name: string) {
+      eventsExecutionOrdering.add(name);
+    }
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingStart').mockImplementation(() =>
+      saveEvent(routerEventTriggers.dispatchRoutingStart.name),
+    );
+
+    vi.spyOn(
+      routerEventTriggers,
+      'dispatchRoutingLoadingStart',
+    ).mockImplementation(() =>
+      saveEvent(routerEventTriggers.dispatchRoutingLoadingStart.name),
+    );
+    vi.spyOn(
+      routerEventTriggers,
+      'dispatchRoutingLoadingEnd',
+    ).mockImplementation(() =>
+      saveEvent(routerEventTriggers.dispatchRoutingLoadingEnd.name),
+    );
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingError').mockImplementation(
+      () => saveEvent(routerEventTriggers.dispatchRoutingError.name),
+    );
+
+    vi.spyOn(routerEventTriggers, 'dispatchRoutingEnd').mockImplementation(() =>
+      saveEvent(routerEventTriggers.dispatchRoutingEnd.name),
+    );
+
+    route.navigateByUrl('/about');
+
+    const callOrdering = Array.from(eventsExecutionOrdering);
+
+    expect(callOrdering.at(0)).toBe(routerEventTriggers.dispatchRoutingStart.name);
+    expect(callOrdering.at(1)).toBe(routerEventTriggers.dispatchRoutingLoadingStart.name);
+    expect(callOrdering.at(2)).toBe(routerEventTriggers.dispatchRoutingLoadingEnd.name);
+    expect(callOrdering.at(3)).toBe(routerEventTriggers.dispatchRoutingEnd.name);
+  });
+});

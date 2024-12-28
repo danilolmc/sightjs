@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2023",
+      "DOM"
+    ],
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": false,
+    "importHelpers": true,
+    "declaration": true,
+    "types": [
+      "@types/node",
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ],
+    "sourceMap": true,
+    "rootDir": ".",
+    "allowImportingTsExtensions": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
+}

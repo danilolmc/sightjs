@@ -1,0 +1,9 @@
+export function debounce(func: Function, delay: number) {
+  let timeoutId: number;
+  return function (...args: unknown[]) {
+    clearTimeout(timeoutId); // Limpa o timer existente
+    timeoutId = window.setTimeout(() => {
+      func.apply(this, args); // Executa a função após o delay
+    }, delay);
+  };
+}

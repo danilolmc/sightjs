@@ -1,0 +1,52 @@
+import { routeTesting } from '@/lib/router/testing/router.testing.ts';
+import { screen } from '@testing-library/dom';
+import { router } from '@/lib/router/api/router.ts';
+import { vi } from 'vitest';
+import { HandlersFacade } from '@/lib/router/core/handlers/handlers.facade.ts';
+
+
+const AuthGuard =
+
+describe('Router Rendering - Nested Routes', () => {
+  const HandlersFacadeMock: HandlersFacade = {
+    notFoundHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+    documentTitleHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+  };
+
+  beforeAll(() => {
+    routeTesting(
+      [
+        {
+          path: 'parent',
+          component: () => componentRenderingCases.parentOutlet,
+          children: [
+            {
+              path: 'child',
+              canActivate: []
+              component: () => componentRenderingCases.childOutlet,
+            },
+          ],
+        },
+      ],
+      {
+        handlersFacade: HandlersFacadeMock,
+      },
+    );
+  });
+
+  it('should render child route in outlet', async () => {
+    const route = router();
+
+    route.navigateByUrl('/parent/child');
+
+    const parent = await screen.findByTestId('child-outlet-content');
+    const child = parent.querySelector('[data-testid=child-outlet-content]');
+
+    expect(parent).toBeInTheDocument();
+    expect(child).toBeDefined();
+  });
+});

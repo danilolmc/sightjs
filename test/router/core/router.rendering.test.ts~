@@ -1,0 +1,163 @@
+import { routeTesting } from '@/lib/router/testing/router.testing.ts';
+import { screen, waitFor } from '@testing-library/dom';
+import { router } from '@/lib/router/api/router.ts';
+import { routingListener } from '@/lib/router/core/events/listener.ts';
+import { RouterEvents } from '@/lib/router/core/events/router-events.ts';
+import { vi } from 'vitest';
+import { NotFoundRouteError } from '@/lib/router/core/handlers/404/errors/not-found.error.ts';
+import { HandlersFacade } from '@/lib/router/core/handlers/handlers.facade.ts';
+import { componentRenderingCases } from './rendering/rendering-cases.ts';
+
+describe('Router Rendering', () => {
+  beforeAll(() => {
+    routeTesting([
+      {
+        path: '',
+        component: () => componentRenderingCases.home,
+      },
+      {
+        path: 'about',
+        component: () => componentRenderingCases.about,
+        children: [
+          {
+            path: 'hello',
+            component: () => componentRenderingCases.postAuthor,
+          },
+        ],
+      },
+      {
+        path: 'post/:id',
+        component: () => componentRenderingCases.post,
+        children: [
+          {
+            path: 'author/:name',
+            component: () => componentRenderingCases.postAuthor,
+          },
+        ],
+      },
+      {
+        path: '**',
+        component: () => componentRenderingCases.notFound,
+      },
+    ]);
+  });
+
+  it.each([
+    { routeToNavigateFor: '', testId: 'home-content' },
+    { routeToNavigateFor: '/about', testId: 'about-content' },
+    { routeToNavigateFor: '/post/1', testId: 'post-content' },
+    { routeToNavigateFor: '/post/1/author/John Doe', testId: 'author-content' },
+  ])(
+    'should navigate to $routeToNavigateFor route and render component with $testId data-testid attribute',
+    async (data) => {
+      const route = router();
+      route.navigateByUrl(data.routeToNavigateFor);
+
+      const about = await screen.findByTestId(data.testId);
+
+      expect(about).toBeInTheDocument();
+    },
+  );
+
+  it('should render fallback when route does not exist', async () => {
+    const route = router();
+    route.navigateByUrl('/inexistent-route');
+
+    await new Promise(requestAnimationFrame);
+    const notFound = await screen.findByTestId('notFound-content');
+    expect(notFound).toBeInTheDocument();
+  });
+
+  it('should dispatch route error event when fallback for not existent route is not defined', async () => {
+    const route = router();
+
+    const errorListener = vi.fn((error) => {
+      expect(error).toEqual(expect.any(NotFoundRouteError));
+    });
+
+    routingListener.on(RouterEvents.CHANGE_ERROR, errorListener);
+
+    route.navigateByUrl('/about/hello/no');
+
+    await waitFor(() => {
+      expect(errorListener).toHaveBeenCalled();
+    });
+  });
+});
+
+describe('Router Rendering - Root', () => {
+  const HandlersFacadeMock: HandlersFacade = {
+    notFoundHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+    documentTitleHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+  };
+
+  beforeAll(() => {
+    routeTesting(
+      [
+        {
+          path: 'would-be-root',
+          component: () => componentRenderingCases.home,
+        },
+      ],
+      {
+        handlersFacade: HandlersFacadeMock,
+      },
+    );
+  });
+
+  it('should handle missing root route', async () => {
+    const route = router();
+
+    vi.spyOn(HandlersFacadeMock, 'notFoundHandler');
+
+    route.navigateByUrl('');
+
+    expect(HandlersFacadeMock.notFoundHandler).toHaveBeenCalled();
+  });
+});
+
+describe('Router Rendering - Outlet', () => {
+  const HandlersFacadeMock: HandlersFacade = {
+    notFoundHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+    documentTitleHandler: vi.fn(() => ({
+      handle: vi.fn(),
+    })),
+  };
+
+  beforeAll(() => {
+    routeTesting(
+      [
+        {
+          path: 'parent',
+          component: () => componentRenderingCases.parentOutlet,
+          children: [
+            {
+              path: 'child',
+              component: () => componentRenderingCases.childOutlet,
+            },
+          ],
+        },
+      ],
+      {
+        handlersFacade: HandlersFacadeMock,
+      },
+    );
+  });
+
+  it('should render child route in outlet', async () => {
+    const route = router();
+
+    route.navigateByUrl('/parent/child');
+
+    const parent = await screen.findByTestId('parent-outlet-content');
+
+    console.log(parent.innerHTML);
+    expect(parent).toBeInTheDocument();
+  });
+});

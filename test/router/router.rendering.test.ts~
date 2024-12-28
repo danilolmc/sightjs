@@ -1,0 +1,112 @@
+import { html } from '@/lib/dom/html.ts';
+import { Component } from '@/lib/dom/component/component.ts';
+import {
+  routeTesting,
+  waitForRouting,
+} from '@/lib/router/testing/router.testing.ts';
+import { screen } from '@testing-library/dom';
+import { router } from '@/lib/router/api/router.ts';
+import { routingListener } from '@/lib/router/core/events/listener.ts';
+import { RouterEvents } from '@/lib/router/core/events/router-events.ts';
+import { vi } from 'vitest';
+import { NotFoundRouteError } from '@/lib/router/core/handlers/404/errors/not-found.error.ts';
+
+const componentsCases = {
+  home: Component(
+    'app-home-test-a',
+    () => () => html` <div data-testid="home-content">Home</div>`,
+  ),
+  about: Component(
+    'app-home-about-test-b',
+    () => () => html` <div data-testid="about-content">Home - About</div>`,
+  ),
+  post: Component(
+    'app-about-param',
+    () => () => html` <div data-testid="post-content">Post</div>`,
+  ),
+  postAuthor: Component(
+    'app-author-nested-param',
+    () => () => html` <div data-testid="author-content">Post - Author</div>`,
+  ),
+  notFound: Component(
+    'app-render-notfound',
+    () => () => html` <div data-testid="notFound-content">Not Found</div>`,
+  ),
+};
+
+describe('Rendering Route', () => {
+  beforeAll(() => {
+    routeTesting([
+      {
+        path: '',
+        component: () => componentsCases.home,
+      },
+      {
+        path: 'about',
+        component: () => componentsCases.about,
+        children: [
+          {
+            path: 'hello',
+            component: () => componentsCases.postAuthor,
+          },
+        ],
+      },
+      {
+        path: 'post/:id',
+        component: () => componentsCases.post,
+        children: [
+          {
+            path: 'author/:name',
+            component: () => componentsCases.postAuthor,
+          },
+        ],
+      },
+      {
+        path: '**',
+        component: () => componentsCases.notFound,
+      },
+    ]);
+  });
+
+  it.each([
+    { routeToNavigateFor: '', testId: 'home-content' },
+    { routeToNavigateFor: '/about', testId: 'about-content' },
+    { routeToNavigateFor: '/post/1', testId: 'post-content' },
+    { routeToNavigateFor: '/post/1/author/John Doe', testId: 'author-content' },
+  ])(
+    'should navigate to $routeToNavigateFor route and render component with $testId data-testid attribute',
+    async (data) => {
+      const route = router();
+      route.navigateByUrl(data.routeToNavigateFor);
+
+      const about = await screen.findByTestId(data.testId);
+
+      expect(about).toBeInTheDocument();
+    },
+  );
+
+  it('should render fallback when route does not exist', async () => {
+    const route = router();
+    route.navigateByUrl('/inexistent-route');
+
+    const notFound = await screen.findByTestId('notFound-content');
+
+    expect(notFound).toBeInTheDocument();
+  });
+
+  it('should dispatch route error event when fallback for not existent route is not defined', async () => {
+    const route = router();
+
+    const errorListener = vi.fn((error) => {
+      expect(error).toEqual(expect.any(NotFoundRouteError));
+    });
+
+    routingListener.on(RouterEvents.CHANGE_ERROR, errorListener);
+
+    route.navigateByUrl('/about/hello/no');
+
+    await waitForRouting(() => {
+      expect(errorListener).toHaveBeenCalled();
+    });
+  });
+});

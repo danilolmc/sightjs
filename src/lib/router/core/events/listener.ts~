@@ -1,0 +1,25 @@
+import { RouterEvents } from '@/lib/router/types.ts';
+
+static class RoutingListener {
+  private static callbacks = new Map<RouterEvents, Function[]>([]);
+
+  static on(event: RouterEvents, callback: (data: any) => void) {
+    const callbacks = RoutingListener.callbacks.get(event);
+
+    callbacks
+      ? callbacks.push(callback)
+      : this.callbacks.set(event, [callback]);
+  }
+
+  dispatch(event: RouterEvents) {
+    const eventCallbacks = RoutingListener.callbacks.get(event);
+
+    if (!eventCallbacks) return;
+
+    eventCallbacks.forEach((callback) => callback);
+  }
+}
+
+export const routingListener = {
+  on: RoutingListener.on,
+};

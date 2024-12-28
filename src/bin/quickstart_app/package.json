@@ -1,0 +1,23 @@
+{
+  "name": "app-project",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite serve",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "viewjs": "latest"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "vite": "^5.4.9",
+    "vitest": "^2.1.4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.5.2"
+  }
+}
