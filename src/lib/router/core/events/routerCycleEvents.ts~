@@ -1,0 +1,24 @@
+import { IRouterDispatchingEvents } from '@/lib/types/router/router.types.ts';
+
+export enum RouterCycleEvents {
+  CHANGE = 'route-change',
+  CHANGE_START = 'routing-start',
+  CHANGE_END = 'routing-end',
+  CHANGE_ERROR = 'routing-error',
+  CHANGE_CANCEL = 'routing-cancel',
+  CHANGE_LOADING = 'routing-loading',
+}
+
+function triggerRouteEvent(event: RouterCycleEvents) {
+  console.log('chamou', event);
+  dispatchEvent(new CustomEvent(event));
+}
+
+export const routerEventTriggers: IRouterDispatchingEvents = {
+  dispatchRoutingChange: () => triggerRouteEvent(RouterCycleEvents.CHANGE),
+  dispatchRoutingStart: () => triggerRouteEvent(RouterCycleEvents.CHANGE_START),
+  dispatchRoutingEnd: () => triggerRouteEvent(RouterCycleEvents.CHANGE_END),
+  dispatchRoutingError: () => triggerRouteEvent(RouterCycleEvents.CHANGE_ERROR),
+  dispatchRoutingCancel: () => triggerRouteEvent(RouterCycleEvents.CHANGE_CANCEL),
+  dispatchRoutingLoading: () => triggerRouteEvent(RouterCycleEvents.CHANGE_LOADING),
+};

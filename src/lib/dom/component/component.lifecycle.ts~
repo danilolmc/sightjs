@@ -1,0 +1,35 @@
+// Ideia para os hooks, usar eventos para disparar as funcoes
+// similar ao que fizemos com as rotas
+// Em cada etapa correspondente de renderização, disparamos um evento
+// E cada uma dessas funções abaixo, quando chamada, irá registrar um listener para o evento correspondente
+
+export function onChange() {}
+
+export function onMount() {}
+
+export class HookHandler {
+  private _callbacks = [];
+
+  protected get callbacks() {
+    return this._callbacks;
+  }
+
+  protected add(callback: () => void) {
+    this._callbacks.push(callback);
+  }
+
+  executeCallbacks() {
+    this._callbacks.forEach((callback) => callback());
+  }
+}
+
+export class OnDestroyHandler extends HookHandler {
+
+  constructor() {
+    super();
+  }
+
+  onDestroy(callback: () => void){
+    super.add(callback);
+  }
+}

@@ -1,0 +1,31 @@
+export type Route = {
+  path: string,
+  component: () => HTMLElement,
+  title?: string,
+  outlet?: string,
+  children?: Route[],
+  canActivate?: () => boolean
+}
+
+export type Routes = Route[];
+
+const routerMapping = new Map();
+
+export function provideRoutes(routes: Routes, parentPath = '') {
+
+  routes.forEach((route: Route) => {
+    const path = parentPath.length > 0 ? `${parentPath}/${route.path}` : route.path;
+
+    routerMapping.set(path, route.component)
+
+    if(route.children) {
+      provideRoutes(route.children, path);
+    }
+  })
+
+  return routerMapping;
+}
+
+export function getRoutes() {
+  return routerMapping;
+}

@@ -1,0 +1,37 @@
+name: Maintenance
+
+on:
+  push:
+    branches:
+      - feature/**
+      - fix/**
+      - docs/**
+      - refactor/**
+      - test/**
+      - ci/**
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        run: npm run build:prod
+
+      - name: Test
+        run: npm run test
+
+      - name: Lint
+        run: npm run lint

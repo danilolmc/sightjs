@@ -1,0 +1,113 @@
+{
+  "name": "viewjs",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "bin": {
+    "viewjs": "./bin/index.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danilolmc/viewjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/danilolmc/viewjs/issues"
+  },
+  "homepage": "https://viewjs.gitbook.io/home",
+  "exports": {
+    "./core": {
+      "import": "./lib/core/index.js",
+      "types": "./lib/core/index.d.ts"
+    },
+    "./dom": {
+      "import": "./lib/dom/index.js",
+      "types": "./lib/dom/index.d.ts"
+    },
+    "./router": {
+      "import": "./lib/router/index.js",
+      "types": "./lib/router/index.d.ts"
+    },
+    "./utils": {
+      "import": "./lib/utils/index.js",
+      "types": "./lib/utils/index.d.ts"
+    },
+    "./boot": {
+      "import": "./lib/boot/index.js",
+      "types": "./lib/boot/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "cross-env NODE_ENV=development tsup",
+    "build:prod": "cross-env NODE_ENV=production tsup",
+    "test": "vitest run",
+    "test:ci": "vitest run --ci",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest",
+    "test:watch:all": "vitest --watchAll",
+    "lint": "eslint --config eslint.config.js",
+    "lint:fix": "eslint --config eslint.config.js --fix",
+    "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|json)\"",
+    "semantic-release": "npx semantic-release",
+    "prepare": "husky",
+    "commit": "git-cz"
+  },
+  "author": "danilolmc",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "execa": "^9.5.1",
+    "figlet": "^1.8.0",
+    "hyperhtml": "^2.34.2",
+    "inquirer": "^12.0.0",
+    "ora": "^8.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^19.6.0",
+    "@eslint/js": "^9.17.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.5.2",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/figlet": "^1.7.0",
+    "@types/node": "^22.7.5",
+    "@typescript-eslint/parser": "^8.18.2",
+    "@vitest/coverage-v8": "^2.1.4",
+    "commitizen": "^4.3.1",
+    "commitlint": "^19.6.1",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "glob": "^11.0.0",
+    "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "jsdom": "^25.0.1",
+    "prettier": "3.3.3",
+    "semantic-release": "^24.2.0",
+    "tslib": "^2.7.0",
+    "tsup": "^8.3.0",
+    "typescript": "5.5.4",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^5.4.9",
+    "vite-plugin-babel": "^1.2.0",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

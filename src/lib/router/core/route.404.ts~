@@ -1,0 +1,16 @@
+import { Routes } from '@/lib/routes/provider.ts';
+import { IRenderer } from '@/lib/routes/core/route.chain.ts';
+
+export class NotFoundRouteHandler {
+  constructor(public renderer: IRenderer) {}
+
+  handleNotFound(routes: Routes, parentElement: Element) {
+    const notFoundRoute = routes.find((route) => route.path == '**');
+
+    if (!notFoundRoute) {
+      throw new Error('Route not found');
+    }
+
+    this.renderer.render(parentElement, notFoundRoute.component());
+  }
+}

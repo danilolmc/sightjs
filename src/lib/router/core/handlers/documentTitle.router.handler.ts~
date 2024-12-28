@@ -1,0 +1,7 @@
+export class DocumentTitleRouterHandler {
+  setDocumentTitle(routeTitle: string) {
+    if (!routeTitle) return;
+    document.title = routeTitle;
+    console.log('Setou o titulo da rota');
+  }
+}

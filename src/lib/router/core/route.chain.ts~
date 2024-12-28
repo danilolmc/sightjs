@@ -1,0 +1,49 @@
+import { RouteRenderer } from '@/lib/routes/core/route.renderer.ts';
+import { Routes } from '@/lib/types/routes.ts';
+import { RouteMatcher } from '@/lib/routes/core/route.matcher.ts';
+
+
+export class Router {
+  private readonly routes: Routes;
+  private readonly rootElement: Element;
+  private readonly routeRenderer = new RouteRenderer();
+
+  constructor(
+    routes: Routes,
+    root: Element) {
+    this.routes = routes;
+    this.rootElement = root;
+  }
+
+  init() {
+    this.bindPopState();
+    this.bindPushState();
+    this.handleChange();
+  }
+
+  private handleRootRoute() {
+    const rootRoute = this.routes.find((route) => route.path === '');
+    if (!rootRoute) throw new Error('Root route not found');
+    this.routeRenderer.render(this.rootElement, rootRoute.component());
+  }
+
+  handleChange() {
+    const subsegments = window.location.pathname.split('/').filter(Boolean);
+    const segmentList = subsegments[Symbol.iterator]();
+
+    const matcher = new RouteMatcher(segmentList);
+
+    const isRootRoute = window.location.pathname === '/';
+
+    if (isRootRoute) this.handleRootRoute();
+    else this.routeMatcher.matchRoute(this.routes, this.rootElement);
+  }
+
+  private bindPopState() {
+    window.addEventListener('popstate', this.handleChange.bind(this));
+  }
+
+  private bindPushState() {
+    window.addEventListener('pushstate', this.handleChange.bind(this));
+  }
+}

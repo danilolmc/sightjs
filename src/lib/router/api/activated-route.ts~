@@ -1,0 +1,67 @@
+import { RouteParams } from '@/lib/types/router/navigation.types.ts';
+import { IActiveRouteSnapshot } from '@/lib/types/router/snapshot/snapshot.types.ts';
+
+export class ActivatedRouteSnapshotApi implements IActiveRouteSnapshot {
+  private _params = {};
+  private _queryParams = {};
+  private static instance: ActivatedRouteSnapshotApi;
+
+  private constructor() {}
+
+  public static getInstance(): ActivatedRouteSnapshotApi {
+    if (!ActivatedRouteSnapshotApi.instance) {
+      ActivatedRouteSnapshotApi.instance = new ActivatedRouteSnapshotApi();
+    }
+    return ActivatedRouteSnapshotApi.instance;
+  }
+
+  getAllParams(): RouteParams {
+    return this._params;
+  }
+
+  setParam(key: string, value: string) {
+    this._params = {
+      ...this._params,
+      [key]: decodeURIComponent(value),
+    };
+  }
+
+  getQueryParams(): RouteParams {
+    return this._queryParams;
+  }
+
+  setQueryParams(queryParams: RouteParams) {
+    this._queryParams = queryParams;
+  }
+
+  setQueryParam(key: string, value: string) {
+    this._queryParams = {
+      ...this._queryParams,
+      [key]: decodeURIComponent(value),
+    };
+  }
+
+  getCurrentRouteParam() {
+    const params = Object.entries(this._params);
+    if (!params.length) return {};
+    return Object.fromEntries([params.at(-1)]) as RouteParams;
+  }
+}
+
+// export class ActivatedRouteSnapshotApi {
+//   constructor(private activatedRoute: IActiveRouteSnapshot) {}
+//
+//   getAllParams() {
+//     return this.activatedRoute.params;
+//   }
+//
+//   getCurrentSegmentParam() {
+//     const params = Object.entries(this.activatedRoute.params);
+//     if (!params.length) return {};
+//     return Object.fromEntries([params.at(-1)]);
+//   }
+//
+//   getQueryParams() {
+//     return this.activatedRoute.queryParams;
+//   }
+// }

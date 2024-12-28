@@ -1,0 +1,8 @@
+import { render } from '@/lib/dom/render.ts';
+import { IRenderer } from '@/lib/types/routes.ts';
+
+export class RouteRenderer implements IRenderer {
+  render(parentElement: Element, component: Element) {
+    render(parentElement, component);
+  }
+}

@@ -1,0 +1,119 @@
+import { Route, Routes } from '@/lib/routes/provider.ts';
+import { render } from '@/lib/dom/render.ts';
+
+export class RouterFactory {
+  private routes = [] as Route[];
+  private root: Element;
+  private segmentList: IterableIterator<string>;
+
+
+  init(routes: Routes, root: Element) {
+    this.routes = routes;
+    this.root = root;
+    this.bindPopState();
+    this.bindPushState();
+    this.handleRouteChange();
+  }
+
+  setDocumentTitle(title: string) {
+    if (title) {
+      document.title = title;
+    }
+  }
+
+  renderCurrentRoute(routes: Route[], parentElement: Element) {
+    const currentSegment = this.segmentList.next();
+
+    if (currentSegment.done) {
+      return;
+    }
+
+    const routeParamRegex = /\/:([^\/]+)$/;
+
+    const matchingRoute = routes.find((route) => {
+
+      if (routeParamRegex.test(route.path)) {
+        const segmentRoute = currentSegment.value;
+        const segmentedRouteParam = this.segmentList.next().value;
+
+/*
+        const matchingKey = route.path.match(routeParamRegex);
+
+        const extractedParamKey = matchingKey ? matchingKey[1] : null;
+        routeParams[extractedParamKey] = segmentedRouteParam;
+*/
+
+        if (!segmentRoute || !segmentedRouteParam) return false;
+
+        const fullRouteSegment = `${segmentRoute}/${segmentedRouteParam}`;
+        const routeReplacing = route.path.replace(
+          /:[^\/]+$/,
+          segmentedRouteParam,
+        );
+        return fullRouteSegment == routeReplacing;
+      } else {
+        return route.path == currentSegment.value;
+      }
+    });
+
+    if (!matchingRoute) {
+      const notFoundRoute = routes.find((route) => route.path == '**');
+
+      if (!notFoundRoute) {
+        throw new Error('Route not found');
+      }
+
+      render(parentElement, notFoundRoute.component());
+      this.setDocumentTitle(notFoundRoute.title);
+      return;
+    }
+
+    const component = matchingRoute.component();
+
+    console.log('asda');
+    requestAnimationFrame(() => {
+      render(parentElement, component);
+    });
+
+    if (matchingRoute.children) {
+      requestAnimationFrame(() => {
+        const outlet = component.querySelector('n-outlet');
+        this.handleRouteChange.call(
+          this,
+          matchingRoute.children,
+          outlet ? outlet : component,
+        );
+      });
+    }
+  }
+
+  private renderRootRoute(){
+    const rootRoute = this.routes.find((route) => route.path == '');
+    render(this.root, rootRoute.component());
+    return rootRoute;
+  }
+
+  private handleRouteChange() {
+    const subsegments = window.location.pathname.split('/').filter(Boolean);
+
+    this.segmentList = subsegments[Symbol.iterator]();
+
+    const isRoot = window.location.pathname == '/';
+
+    if (isRoot) {
+      const rootRoute = this.renderRootRoute();
+      rootRoute.title && (document.title = rootRoute.title);
+      return;
+    }
+
+    this.renderCurrentRoute.call(this, this.routes, this.root);
+  }
+
+  bindPopState() {
+    window.addEventListener('popstate', this.handleRouteChange.bind(this));
+  }
+
+  bindPushState() {
+    window.addEventListener('pushstate', this.handleRouteChange.bind(this));
+  }
+}

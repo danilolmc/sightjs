@@ -1,0 +1,76 @@
+import { HistoryAPI } from '@/lib/router/core/adapters/history.adapter.ts';
+
+export class MemoryHistoryAPIAdapter implements HistoryAPI {
+  private historyStack: { state: any; title: string; url?: string }[] = [];
+  private currentStateIndex: number = -1;
+  private currentState: any = null;
+  private pushStateCallback: Function | null = null;
+  private replaceStateCallback: Function | null = null;
+
+  pushState(state: any, title: string, url?: string): void {
+    this.historyStack = this.historyStack.slice(0, this.currentStateIndex + 1);
+    this.historyStack.push({ state, title, url });
+    this.currentStateIndex = this.historyStack.length - 1;
+    this.currentState = state;
+
+    if (this.pushStateCallback) {
+      this.pushStateCallback();
+    }
+  }
+
+  replaceState(state: any, title: string, url?: string): void {
+    if (this.currentStateIndex >= 0) {
+      this.historyStack[this.currentStateIndex] = { state, title, url };
+      this.currentState = state;
+    } else {
+      this.pushState(state, title, url);
+    }
+
+    if (this.replaceStateCallback) {
+      this.replaceStateCallback();
+    }
+  }
+
+  go(delta: number): void {
+    const newIndex = this.currentStateIndex + delta;
+    if (newIndex >= 0 && newIndex < this.historyStack.length) {
+      this.currentStateIndex = newIndex;
+      this.currentState = this.historyStack[this.currentStateIndex]?.state;
+    }
+  }
+
+  back(): void {
+    this.go(-1);
+  }
+
+  forward(): void {
+    this.go(1);
+  }
+
+  getState(): any {
+    return this.currentState;
+  }
+
+  patchPushState(callback: Function): void {
+    console.log('chamgou');
+    this.pushStateCallback = callback;
+  }
+
+  patchReplaceState(callback: Function): void {
+    console.log('chamgou');
+    this.replaceStateCallback = callback;
+  }
+
+  // Métodos auxiliares para testes
+  getHistory(): { state: any; title: string; url?: string }[] {
+    return this.historyStack;
+  }
+
+  getCurrentIndex(): number {
+    return this.currentStateIndex;
+  }
+
+  getCurrentState(): any {
+    return this.currentState;
+  }
+}

@@ -1,0 +1,27 @@
+import { Routes } from '@/lib/types/router/router.types.ts';
+import { html } from '@/lib/dom/html.ts';
+import { Component } from '@/lib/dom/component/component.ts';
+
+describe('Navigation', () => {
+  const routes: Routes = [
+    {
+      path: '/',
+      component: () =>
+        Component('app-home-test', () => () => html`<div>Home</div>`),
+      children: [
+        {
+          path: 'about',
+          component: () =>
+            Component('app-home-about-test', () => () => html`
+              <div>Home - About</div>`),
+        },
+      ],
+    },
+  ];
+
+  let routerNavigator = new RouterNavigationTesting(routes);
+
+  it('should navigate to the home page', async () => {
+    await routerNavigator.navigate('/');
+  });
+});

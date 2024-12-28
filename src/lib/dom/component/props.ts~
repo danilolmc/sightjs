@@ -1,0 +1,18 @@
+import { ComponentProps } from '@/lib/types/dom/component.types.ts';
+
+export class PropsHandler {
+  constructor(private component: HTMLElement & { onDestroy: () => void }) {}
+
+  getProps<T>() {
+    return Array.from(this.component.attributes).reduce(
+      (acc: Record<string, string | HTMLCollection>, attr: Attr) => {
+        acc[attr.name] = attr.value;
+        return acc;
+      },
+      {
+        children: this.component.children,
+        onDestroy: this.component.onDestroy.bind(this),
+      },
+    ) as ComponentProps<T>;
+  }
+}
