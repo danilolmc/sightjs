@@ -6,9 +6,10 @@ on:
       - main
       - beta
       - next
+
 jobs:
-  build:
-    name: Build
+  build_and_release:
+    name: Build & Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,23 +34,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20.x"
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release@24.2.0
+        run: npx semantic-release
