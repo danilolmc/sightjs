@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "bin": {
-    "vistajs": "./bin/index.js"
+    "vistajs": "./dist/bin/index.js"
   },
   "files": [
     "dist/**/*",
