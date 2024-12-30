@@ -13,10 +13,10 @@ const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 const version = process.env.VERSION;
 
 if (packageJson.dependencies) {
-  packageJson.dependencies.vistajs = `^${version}`;
+  packageJson.dependencies.vistajs = `${version}`;
 } else {
   packageJson.dependencies = {
-    vistajs: `^${version}`,
+    vistajs: `${version}`,
   };
 }
 
