@@ -14,7 +14,7 @@
       "prerelease": "next"
     }
   ],
-  "plugins": [
+ "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
@@ -28,8 +28,14 @@
       "@semantic-release/github",
       {
         "assets": [
-          "dist/**/*",
-          "CHANGELOG.md"
+          {
+            "path": "dist/*",
+            "name": "dist-${nextRelease.version}-${nextRelease.gitTag}.zip"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "name": "CHANGELOG-${nextRelease.version}.md"
+          }
         ]
       }
     ],
