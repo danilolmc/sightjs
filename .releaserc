@@ -20,7 +20,7 @@
     [
       "@semantic-release/changelog",
       {
-        "changelogFile": "docs/CHANGELOG.md"
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     "@semantic-release/npm",
@@ -30,7 +30,7 @@
         "assets": [
           {
             "path": "tmp/dist.zip",
-            "name": "dist-${nextRelease.version}-${nextRelease.gitTag}.zip"
+            "name": "dist-${nextRelease.version}.zip"
           },
           {
             "path": "CHANGELOG.md",

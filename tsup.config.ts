@@ -14,12 +14,13 @@ function copyBoilerplate() {
   console.log('Boilerplate copied successfully');
 }
 
+
 export async function zipDist() {
   const __filename = fileURLToPath(import.meta.url);
-
   const __dirname = path.dirname(__filename);
 
   const rootDir = path.resolve(__dirname);
+  const distDir = path.join(rootDir, 'dist');
   const zipFilePath = path.join(rootDir, 'tmp', 'dist.zip');
 
   if (!fs.existsSync(path.join(rootDir, 'tmp'))) {
@@ -30,13 +31,22 @@ export async function zipDist() {
     fs.unlinkSync(zipFilePath);
   }
 
+  fs.copyFileSync(path.join(rootDir, 'package.json'), path.join(distDir, 'package.json'));
+  fs.copyFileSync(path.join(rootDir, 'README.md'), path.join(distDir, 'README.md'));
+
+  const assetsDir = path.join(rootDir, 'assets');
+  if (fs.existsSync(assetsDir)) {
+    const distAssetsDir = path.join(distDir, 'assets');
+    fs.cpSync(assetsDir, distAssetsDir, { recursive: true });
+  }
+
   const output = fs.createWriteStream(zipFilePath);
 
   const archive = archiver('zip', { zlib: { level: 9 } });
 
   archive.pipe(output);
 
-  archive.directory(path.join(rootDir, 'dist'), false);
+  archive.directory(distDir, false);
 
   await archive.finalize();
 }
