@@ -27,6 +27,7 @@
     [
       "@semantic-release/github",
       {
+        "addReleases": false,
         "assets": [
           {
             "path": "tmp/dist.zip",
