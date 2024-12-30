@@ -1,5 +1,5 @@
 <header>
-  <img style="margin: 0 auto; display: block" src="./assets/vistajs-logo.svg" alt="VistaJS" width="100" />
+  <img style="margin: 0 auto; display: block" src="assets/vistajs-logo.svg" alt="VistaJS" width="100" />
   <h1 style="text-align: center">VistaJS</h1>
   <p style="text-align: center">VistaJS is a compact JavaScript framework for building web interfaces, offering built-in support for TypeScript and features like signals, computed values, effects, routing, testing and much more, all powered by Vite.</p>
 </header>
