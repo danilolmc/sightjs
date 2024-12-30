@@ -1,3 +1,10 @@
+# [1.0.0-beta.11](https://github.com/danilolmc/vistajs/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2024-12-30)
+
+
+### Bug Fixes
+
+* it changes github plugin assets config ([86a2dff](https://github.com/danilolmc/vistajs/commit/86a2dff6988c1bf4a08d7cb1ce214bfae8462983))
+
 # [1.0.0-beta.10](https://github.com/danilolmc/vistajs/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2024-12-30)
 
 
