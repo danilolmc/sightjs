@@ -1,6 +1,8 @@
-import { cpSync } from 'fs';
-import { join } from 'path';
+import fs, { cpSync } from 'fs';
+import path, { join } from 'path';
 import { defineConfig } from 'tsup';
+import { fileURLToPath } from 'url';
+import archiver from 'archiver';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -12,6 +14,33 @@ function copyBoilerplate() {
   console.log('Boilerplate copied successfully');
 }
 
+export async function zipDist() {
+  const __filename = fileURLToPath(import.meta.url);
+
+  const __dirname = path.dirname(__filename);
+
+  const rootDir = path.resolve(__dirname);
+  const zipFilePath = path.join(rootDir, 'tmp', 'dist.zip');
+
+  if (!fs.existsSync(path.join(rootDir, 'tmp'))) {
+    fs.mkdirSync(path.join(rootDir, 'tmp'));
+  }
+
+  if (fs.existsSync(zipFilePath)) {
+    fs.unlinkSync(zipFilePath);
+  }
+
+  const output = fs.createWriteStream(zipFilePath);
+
+  const archive = archiver('zip', { zlib: { level: 9 } });
+
+  archive.pipe(output);
+
+  archive.directory(path.join(rootDir, 'dist'), false);
+
+  await archive.finalize();
+}
+
 export default defineConfig([
   {
     entry: ['src/lib/**/!(types).ts'],
@@ -21,6 +50,13 @@ export default defineConfig([
     format: ['esm'],
     dts: true,
     minify: isProd,
+    onSuccess: async () => {
+      try {
+        await zipDist();
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   {
     entry: ['src/bin/**/*.ts', '!src/bin/quickstart_app/**/*'],

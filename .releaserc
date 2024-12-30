@@ -29,7 +29,7 @@
       {
         "assets": [
           {
-            "path": "dist/*",
+            "path": "tmp/dist.zip",
             "name": "dist-${nextRelease.version}-${nextRelease.gitTag}.zip"
           },
           {
