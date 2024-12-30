@@ -1,25 +1,7 @@
 <header>
-    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 7187 7188" fill="none">
-     <style>
-      svg {
-        display: block;
-        margin: auto;
-      }
-      @media (prefers-color-scheme: dark) {
-        .border { stroke: white; }
-        .line { fill: white; }
-      }
-      @media (prefers-color-scheme: light) {
-        .border { stroke: black; }
-        .line { fill: black; }
-      }
-     </style>
-     <rect class="border" x="80.0703" y="80.6113" width="7026.66" height="7026.66" rx="748" stroke-width="160"></rect>
-     <path d="M3575.29 561.943L3708.12 3654.04L3575.29 6625.94L3478.68 3654.04L3575.29 561.943Z" fill="white" class="line"></path>
-     <path class="line" d="M561.402 3612.05L3653.5 3479.22L6625.4 3612.05L3653.5 3708.67L561.402 3612.05Z" fill="white"></path>
-    </svg>
-    <h1 style="text-align: center">VistaJS</h1>
-    <p style="text-align: center">VistaJS is a compact JavaScript framework for building web interfaces, offering built-in support for TypeScript and features like signals, computed values, effects, routing, testing and much more, all powered by Vite.</p>
+  <img style="margin: 0 auto; display: block" src="./assets/vistajs-logo.svg" alt="VistaJS" width="100" />
+  <h1 style="text-align: center">VistaJS</h1>
+  <p style="text-align: center">VistaJS is a compact JavaScript framework for building web interfaces, offering built-in support for TypeScript and features like signals, computed values, effects, routing, testing and much more, all powered by Vite.</p>
 </header>
 
 ```typescript
