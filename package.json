@@ -21,24 +21,24 @@
   "homepage": "https://vistajs.gitbook.io/home",
   "exports": {
     "./core": {
-      "import": "./lib/core/index.js",
-      "types": "./lib/core/index.d.ts"
+      "import": "./dist/lib/core/index.js",
+      "types": "./dist/lib/core/index.d.ts"
     },
     "./dom": {
-      "import": "./lib/dom/index.js",
-      "types": "./lib/dom/index.d.ts"
+      "import": "./dist/lib/dom/index.js",
+      "types": "./dist/lib/dom/index.d.ts"
     },
     "./router": {
-      "import": "./lib/router/index.js",
-      "types": "./lib/router/index.d.ts"
+      "import": "./dist/lib/router/index.js",
+      "types": "./dist/lib/router/index.d.ts"
     },
     "./utils": {
-      "import": "./lib/utils/index.js",
-      "types": "./lib/utils/index.d.ts"
+      "import": "./dist/lib/utils/index.js",
+      "types": "./dist/lib/utils/index.d.ts"
     },
     "./boot": {
-      "import": "./lib/boot/index.js",
-      "types": "./lib/boot/index.d.ts"
+      "import": "./dist/lib/boot/index.js",
+      "types": "./dist/lib/boot/index.d.ts"
     }
   },
   "scripts": {
