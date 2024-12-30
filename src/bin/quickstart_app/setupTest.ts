@@ -4,10 +4,10 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { beforeAll, vi } from 'vitest';
 
-import { boostrap } from 'viewjs/boot';
+import { boostrap } from 'vistajs/boot';
 import { app } from './src';
 
-vi.mock('viewjs/boot', () => ({
+vi.mock('vistajs/boot', () => ({
   boostrap: vi.fn(),
 }));
 

@@ -1,13 +1,13 @@
 <header>
-  <img style="margin: 0 auto; display: block" src="./assets/viewjs-logo.svg" alt="ViewJS" width="100" />
-  <h1 style="text-align: center">ViewJS</h1>
-  <p style="text-align: center">ViewJS is a JavaScript mini-framework for building web interfaces, with support for TypeScript and features like signals, computed values, effects, routing, testing and much more, powered by Vite.</p>
+  <img style="margin: 0 auto; display: block" src="assets/vistajs-logo.svg" alt="ViewJS" width="100" />
+  <h1 style="text-align: center">VistaJS</h1>
+  <p style="text-align: center">VistaJS is a compact JavaScript framework for building web interfaces, offering built-in support for TypeScript and features like signals, computed values, effects, routing, testing and much more, all powered by Vite.</p>
 </header>
 
 ```typescript
-import { signal } from 'viewjs/core';
-import { Component, html } from 'viewjs/dom';
-import { boostrap } from 'viewjs/boot';
+import { signal } from 'vistajs/core';
+import { Component, html } from 'vistajs/dom';
+import { boostrap } from 'vistajs/boot';
 
 const counter = Component('app-counter', () => {
   const counter = signal(0);
@@ -24,7 +24,8 @@ const root = document.querySelector('#app') as Element;
 boostrap(root, counter);
 ```
 
-### Some ViewJS features
+### Some of VistaJS features:
+
 - **Signals**: Reactive signals for managing state.
 - **Effects**: Sync changes and carry out side effects.
 - **Computed Values**: Computed values derived from signals state.
@@ -34,4 +35,4 @@ boostrap(root, counter);
 - **CSS Modules**: Support for CSS/CSS Modules and more.
 - **Functional Components**: Leverage the simplicity.
 
-Check [ViewJS docs](https://viewjs.gitbook.io/home/quickstart) to start your first project! 😉
+Check [VistaJS docs](https://vistajs.gitbook.io/home/quickstart) to start your first project! 😉

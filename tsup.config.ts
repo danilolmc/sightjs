@@ -1,5 +1,5 @@
-import { cpSync, copyFileSync } from 'fs';
-import { join, resolve } from 'path';
+import { cpSync } from 'fs';
+import { join } from 'path';
 import { defineConfig } from 'tsup';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -12,20 +12,6 @@ function copyBoilerplate() {
   console.log('Boilerplate copied successfully');
 }
 
-function copyFiles() {
-  try {
-    copyFileSync(
-      resolve('package.json'),
-      resolve('dist/package.json'),
-    );
-    copyFileSync(resolve('README.md'), resolve('dist/README.md'));
-    copyFileSync(resolve('LICENSE'), resolve('dist/LICENSE'));
-    console.log('Files copied successfully');
-  } catch (err) {
-    console.error('Error copying files:', err);
-  }
-}
-
 export default defineConfig([
   {
     entry: ['src/lib/**/!(types).ts'],
@@ -35,13 +21,6 @@ export default defineConfig([
     format: ['esm'],
     dts: true,
     minify: isProd,
-    onSuccess: async () => {
-      try {
-        copyFiles();
-      } catch (error) {
-        console.error(error);
-      }
-    },
   },
   {
     entry: ['src/bin/**/*.ts', '!src/bin/quickstart_app/**/*'],

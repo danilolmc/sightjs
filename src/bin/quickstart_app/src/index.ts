@@ -1,7 +1,7 @@
 import styles from './index.module.css';
-import { signal } from 'viewjs/core';
-import { Component, html } from 'viewjs/dom';
-import { boostrap } from 'viewjs/boot';
+import { signal } from 'vistajs/core';
+import { Component, html } from 'vistajs/dom';
+import { boostrap } from 'vistajs/boot';
 
 import logo from '../images/viewjs-logo.svg';
 
@@ -15,9 +15,11 @@ export const app = Component('app-counter', () => {
   return () => html`
     <div class="${styles.counter_container}">
       <img src="${logo}" />
-      <p>ViewJS is running!</p>
+      <p>VistaJS is running!</p>
       <button onclick=${increment}>counter is ${counter()}</button>
-      <a href="https://viewjs.gitbook.io/home" target="_blank">Learn ViewJS!</a>
+      <a href="https://vistajs.gitbook.io/home" target="_blank"
+        >Learn VistaJS!</a
+      >
     </div>
   `;
 });

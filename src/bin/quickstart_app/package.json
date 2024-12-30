@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "viewjs": "latest"
+    "vistajs": "latest"
   },
   "devDependencies": {
     "typescript": "5.5.4",

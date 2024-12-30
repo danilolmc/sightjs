@@ -7,9 +7,8 @@ import { asksForProjectName } from './asksForProjectName.js';
 import { createProjectQuickstart } from './createProjectQuickstart.ts';
 import { showBanner } from './showBanner.js';
 import { execa } from 'execa';
-import { handleViewJSVersion } from '@/bin/handleViewJSversion.ts';
 
-export const LIBNAME = 'ViewJS';
+export const LIBNAME = 'VistaJS';
 
 process.stdin.on('keypress', (_, key) => {
   if (key.name === 'escape' || (key.ctrl && key.name === 'c')) {
@@ -52,10 +51,6 @@ program
 
       await createProjectQuickstart(projectData);
       spinner.succeed('Project created!');
-
-      // atualizar o package.json do projeto que acabou de ser criado, com a versão temporária do view instalada pelo npx
-      // para que no próximo passo, a instalação das dependências seja feita com a versão correta do viewjs
-      handleViewJSVersion(projectData);
 
       spinner.start('Installing dependencies...');
       await execa('npm', ['install'], {

@@ -1,22 +1,24 @@
 {
-  "name": "viewjs",
+  "name": "vistajs",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "bin": {
-    "viewjs": "./bin/index.js"
+    "vistajs": "./bin/index.js"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danilolmc/viewjs.git"
+    "url": "git+https://github.com/danilolmc/vistajs.git"
   },
   "bugs": {
-    "url": "https://github.com/danilolmc/viewjs/issues"
+    "url": "https://github.com/danilolmc/vistajs/issues"
   },
-  "homepage": "https://viewjs.gitbook.io/home",
+  "homepage": "https://vistajs.gitbook.io/home",
   "exports": {
     "./core": {
       "import": "./lib/core/index.js",

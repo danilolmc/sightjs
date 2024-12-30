@@ -19,7 +19,7 @@
     ],
     [
       "@semantic-release/exec", {
-        "prepareCmd": "VERSION=${nextRelease.version} node dist/bin/updateViewJSVersion.js"
+        "prepareCmd": "VERSION=${nextRelease.version} node dist/bin/handleBoilerplateLibVersion.js"
       }
     ]
   ]
