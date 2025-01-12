@@ -1,10 +1,10 @@
 import { HistoryAPIAdapter } from '@/lib/router/core/adapters/history.adapter.ts';
 import { HandlersFacade } from '@/lib/router/core/handlers/handlers.facade.ts';
 
-export type CanActivateFn = (route?: Route) => boolean;
+export type CanActivateFn = (route?: Route) => boolean | Promise<boolean>;
 
 export interface IRouteGuard {
-  handleCanActivate: (route: Route) => boolean;
+  handleCanActivate: (route: Route) => boolean | Promise<boolean>;
 }
 
 export type Route = {

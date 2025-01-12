@@ -80,7 +80,6 @@ export class Router implements IRouter {
         this.activeRouteSnapshot,
         this.handlersFacade,
         this.routeGuard,
-        this.historyAdapter,
         new RouteNavigationApi(this.historyAdapter),
       );
       await matcher.matchRoute(this.routes, this.element);

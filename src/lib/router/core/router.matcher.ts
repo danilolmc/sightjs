@@ -1,5 +1,4 @@
 import {
-  HistoryAPI,
   IActiveRouteSnapshot,
   IRouteGuard,
   IRouteMatcher,
@@ -21,7 +20,6 @@ export class RouterMatcher implements IRouteMatcher {
     private readonly activeRouteSnapshot: IActiveRouteSnapshot,
     private readonly handlersFacade: HandlersFacade,
     private readonly routeGuard: IRouteGuard,
-    private readonly historyAdapter: HistoryAPI,
     private readonly routeNavigation: IRouterNavigationApi,
   ) {}
 
@@ -72,15 +70,7 @@ export class RouterMatcher implements IRouteMatcher {
     return result;
   }
 
-  private restorePreviousUrl() {
-    this.segmentHistory.pop();
-    const previousUrl = `/${this.segmentHistory.join('/')}`;
-    this.historyAdapter.replaceState({}, '', previousUrl);
-  }
-
   async matchRoute(routes: Routes, parentElement: Element) {
-    const routeRenderer = new RouterRenderer();
-
     const matchingRoute = this.matchingRoute(routes, this._segmentList);
 
     if (matchingRoute?.redirectTo) {
@@ -88,12 +78,16 @@ export class RouterMatcher implements IRouteMatcher {
       return;
     }
 
-    const canActivateRoute = this.routeGuard.handleCanActivate(matchingRoute);
+    const hasGuards = Object.hasOwn(matchingRoute ?? {}, 'canActivate');
+    const canActivateRoute = !(hasGuards && !(await this.routeGuard.handleCanActivate(matchingRoute)));
 
     if (!canActivateRoute) {
-      this.restorePreviousUrl();
+      this.routerEvents.dispatchRoutingLoadingEnd();
+      this.routerEvents.dispatchRoutingEnd();
       return;
     }
+
+    const routeRenderer = new RouterRenderer();
 
     if (!matchingRoute) {
       this.handlersFacade
