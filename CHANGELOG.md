@@ -1,3 +1,10 @@
+# [1.0.0-beta.12](https://github.com/danilolmc/vistajs/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2025-01-13)
+
+
+### Bug Fixes
+
+* **router:** it removes default redirection when canActivate returns false ([#5](https://github.com/danilolmc/vistajs/issues/5)) ([42056fa](https://github.com/danilolmc/vistajs/commit/42056fa6d6747434060908b1407ee05c7a808add)), closes [#3](https://github.com/danilolmc/vistajs/issues/3)
+
 # [1.0.0-beta.11](https://github.com/danilolmc/vistajs/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2024-12-30)
 
 
