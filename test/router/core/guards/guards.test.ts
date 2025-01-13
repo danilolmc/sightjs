@@ -5,7 +5,11 @@ import { CanActivateFn, HandlersFacade, router } from '@/lib/router';
 import { Component, html } from '@/lib/dom';
 import { waitForRouting } from '@/lib/utils';
 
-const authGuard: CanActivateFn = () => false;
+const authGuard: CanActivateFn = () => {
+  const route = router();
+  route.navigateByUrl('/home');
+  return false;
+};
 
 const authAdminGuard: CanActivateFn = () => true;
 
